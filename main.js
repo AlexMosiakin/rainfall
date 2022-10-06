@@ -2,10 +2,10 @@ const canvas = document.querySelector('#canvas')
 const ctx = canvas.getContext('2d')
 
 const windowWidth = document.body.clientWidth
-const windowHeight = document.body.clientHeight
+const windowheight = document.body.clientHeight
 
 canvas.width = windowWidth
-canvas.height = windowHeight
+canvas.height = windowheight
 
 const gravity = 0.5
 class Player {
@@ -42,13 +42,13 @@ class Player {
 }
 
 class Platform {
-    constructor() {
+    constructor({x ,y, height}) {
         this.position = {
-            x: 600,
-            y: 900,
+            x,
+            y,
         }
         this.width = 200
-        this.height = 30
+        this.height = height
         this.color = 'blue'
     }
 
@@ -104,11 +104,21 @@ class StaminaBar {
 }
 
 const player = new Player()
-const platform = new Platform()
+const platforms = []
+for (let i = 0; i < 5; i++) {
+    let platformX = Math.random() * windowWidth * (i + 1)
+    let platformY = Math.random() * windowheight 
+    let platformheight = windowheight - platformY
+    platforms.push(new Platform({
+        x: platformX,
+        y: platformY,
+        height: platformheight,
+    }))
+}
 const rainDrops = []
 for (let i = 0; i < 10000; i++) {
-    let dropX = Math.random() * windowWidth
-    let dropY = Math.random() * windowHeight
+    let dropX = Math.random() * windowWidth 
+    let dropY = Math.random() * windowheight
     let dropSpeed = Math.random() * 5
     rainDrops.push(new RainDrop({
         x: dropX,
@@ -130,10 +140,14 @@ const keys = {
     }
 }
 
+let scrollOffset = 0
+
 const animate = () => {
     requestAnimationFrame(animate)
     ctx.clearRect(0,0, canvas.width, canvas.height)
-    //platform.draw()
+    platforms.forEach((platform) => {
+        platform.draw()
+    })
     rainDrops.forEach((drop) => {
         drop.update()
 
@@ -156,33 +170,55 @@ const animate = () => {
     staminaBar.draw()
     player.update()
 
-    if(keys.right.pressed) {
+    if(keys.right.pressed && player.position.x < 400) {
         player.velocity.x = 5 
-    }else if(keys.left.pressed) {
+    }else if(keys.left.pressed && player.position.x > 100) {
         player.velocity.x = -5 
     }else{
         player.velocity.x = 0
-    }
 
-    if(keys.space.pressed && staminaBar.width > 0){
-        staminaBar.width -= 0.5
+        if(keys.right.pressed){
+            scrollOffset += 5
+            platforms.forEach((platform) => {
+                platform.position.x -= 5
+            })
+        }else if(keys.left.pressed){
+            scrollOffset -= 5
+            platforms.forEach((platform) => {
+                platform.position.x += 5
+            })
+        }
     }
+    
+    // if(keys.space.pressed && staminaBar.width > 0){
+    //     staminaBar.width -= 0.5
+    // }
 
     // if(staminaBar.width <= 100){
     //     keys.space.pressed = false
     //     staminaBar.width += 0.5
     // }
     
+    platforms.forEach((platform) => {
+        if(
+            player.position.y + player.height <= platform.position.y 
+            && player.position.y + player.height + player.velocity.y >= platform.position.y
+            && player.position.x + player.width >= platform.position.x
+            && player.position.x <= platform.position.x + platform.width
+            ){
+            player.velocity.y = 0
+        }
 
-    if(
-        player.position.y + player.height <= platform.position.y 
-        && player.position.y + player.height + player.velocity.y >= platform.position.y
-        && player.position.x + player.width >= platform.position.x
-        && player.position.x <= platform.position.x + platform.width
-        ){
-        player.velocity.y = 0
+        if( player.position.x + player.width >= platform.position.x
+            && player.position.x <= platform.position.x + platform.width
+            && player.position.y + player.height + player.velocity.y >= platform.position.y){
+                player.velocity.x = 0
+            }
+    })
+
+    if(scrollOffset > 2000){
+        console.log('you win')
     }
-
     
 }
 
