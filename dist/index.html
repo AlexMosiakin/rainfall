@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>RainFall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <style>
+    *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive;
+    }
+
+    html, body{
+        overflow: hidden;
+        height: 100%;
+    }
+
+    #score{
+        position: absolute;
+        top: 50px;
+        right: 50px;
+    }
+    .score-total{
+      
+      transition: 0.5;
+      position: absolute;
+      width: 500px;
+      background: rgba(0, 0, 0, 0.5);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 50px;
+      text-align: center;
+    }
+    .score-total.hide{
+      opacity: 0;
+      visibility: hidden;
+    }
+    .score-total-text, .score-total-header{
+      color: #fff;
+      margin-bottom: 40px;
+    }
+    .score-total-btn{
+      padding: 5px 10px;
+      border: 1px solid #000;
+      color: #000;
+      background: #fff;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div id="score"></div>
+    <div class="rules-wrapper"></div>
+    <div class="score-total hide">
+        <h1 class="score-total-header">GAME OVER</h1>
+        <div class="score-total-text">It looks like you didn't manage to escape from the forest :(</div>
+        <button class="score-total-btn">TRY AGAIN</button>
+    </div>
+    <canvas></canvas>
+  <script src="./js/canvas.bundle.js"></script></body>
+</html>

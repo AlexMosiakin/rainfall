@@ -8,3 +8,9 @@ html, body{
     overflow: hidden;
     height: 100%;
 }
+
+#score{
+    position: absolute;
+    top: 50px;
+    right: 50px;
+}
