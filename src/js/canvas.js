@@ -17,6 +17,8 @@ cloudImage.src = cloudImageSrc
 
 const canvas = document.querySelector('canvas')
 const scoreElement = document.querySelector('#score')
+const instruction = document.querySelector('.instruction')
+const playBtn = document.querySelector('.play-btn')
 const scoreTotal = document.querySelector('.score-total')
 const tryAgain = document.querySelector('.score-total-btn')
 const ctx = canvas.getContext('2d')
@@ -42,6 +44,8 @@ const keys = {
 }
 
 let winCondition = true
+
+let isPlay = false
 
 let scrollOffset = 0
 
@@ -143,34 +147,6 @@ class Cloud {
       ctx.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
   }
 }
-
-class RainDrop {
-    constructor({x ,y, speed}) {
-        this.position = {
-            x,
-            y,
-        }
-        this.fallSpeed = speed
-        this.width = 1
-        this.height = 2
-        this.color = 'blue'
-    }
-
-    draw() {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-    }
-
-    update() {
-        this.draw()
-        if(this.position.y + this.height <= (windowheight - 100) ){
-            this.position.y += this.fallSpeed
-        }else{
-            this.position.x = Math.random() * windowWidth
-            this.position.y = 0
-        }
-    }
-}
 class Collision {
   constructor({x ,y, width, height}) {
     this.position = {
@@ -215,17 +191,6 @@ const collisions = [new Collision({
     width: 50,
     height: 50,
 })]
-const rainDrops = []
-for (let i = 0; i < 10000; i++) {
-    // let dropX = Math.random() * windowWidth 
-    // let dropY = Math.random() * (windowheight - 300)
-    // let dropSpeed = Math.random() * 5
-    // rainDrops.push(new RainDrop({
-    //     x: dropX,
-    //     y: dropY,
-    //     speed: dropSpeed,
-    // }))
-}
 
 const forest = [
   new Three({
@@ -311,26 +276,6 @@ const animate = () => {
     forest.forEach((three) => {
       three.draw()
     })
-
-    rainDrops.forEach((drop) => {
-        drop.update()
-
-        if(keys.space.pressed){
-            if(drop.position.y >= (player.position.y + player.height) - Math.floor(Math.random() * (100 - 50 + 1) + 50)
-                && drop.position.x <= (player.position.x + (player.width / 2))
-                && drop.position.x >= player.position.x - Math.floor(Math.random() * (50 - 25 + 1) + 20)){
-                drop.position.x -= Math.random() * 50
-                drop.position.y -= 20
-            }
-
-            if(drop.position.y >= (player.position.y + player.height) - Math.floor(Math.random() * (100 - 50 + 1) + 50)
-                && drop.position.x <= (player.position.x + player.width) + Math.floor(Math.random() * (50 - 25 + 1) + 20)
-                && drop.position.x >= player.position.x + (player.width / 2)){
-                drop.position.x += Math.random() * 50
-                drop.position.y -= 20
-            }
-        }
-    })
     player.update()
 
     if(keys.right.pressed && player.position.x < 400) {
@@ -405,66 +350,39 @@ const animate = () => {
       }
     })
 
-    if(scrollOffset > 2000){
-        console.log('you win')
-    }
-
     if(winCondition){
         scoreElement.innerHTML = `<span>Your score: ${scrollOffset}</span>`
         scoreTotal.classList.add('hide')
     }else{
       scoreTotal.classList.remove('hide')
     }
+
+    if(isPlay){
+        instruction.classList.add('hide')
+    }else{
+        instruction.classList.remove('hide')
+    }
 }
-
-
 
 animate()
 
 addEventListener('keydown', ({key}) => {
 
     switch(key){
-        case 'ArrowUp':
+        case ' ':
             if(player.velocity.y === 0 && winCondition){
                 player.velocity.y -= 10
             }
-            break
-        case 'ArrowRight':
-            keys.right.pressed = true
-            break
-        case 'ArrowDown':
-            //player.velocity.y += 10 
-            break
-        case 'ArrowLeft':
-            keys.left.pressed = true
-            break
-        case ' ':
-            keys.space.pressed = true
-            break
-    }
-})
-
-addEventListener('keyup', ({key}) => {
-    switch(key){
-        case 'ArrowUp':
-            //keys.up.pressed = false
-            break
-        case 'ArrowRight':
-            keys.right.pressed = false
-            break
-        case 'ArrowDown':
-            //keys.down.pressed = false
-            break
-        case 'ArrowLeft':
-            keys.left.pressed = false
-            break
-        case ' ':
-            keys.space.pressed = false
             break
     }
 })
 
 tryAgain.addEventListener('click', () => {
   location.reload();
+})
+
+playBtn.addEventListener('click', () => {
+    isPlay = true
+    keys.right.pressed = true
 })
 

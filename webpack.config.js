@@ -40,7 +40,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      favicon: 'favicon.ico',
+      favicon: 'src/img/favicon-16x16.png',
       template: 'src/index.html'
     })
   ],

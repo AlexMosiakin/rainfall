@@ -171,6 +171,8 @@ var cloudImage = new Image();
 cloudImage.src = _img_cloud_png__WEBPACK_IMPORTED_MODULE_3__["default"];
 var canvas = document.querySelector('canvas');
 var scoreElement = document.querySelector('#score');
+var instruction = document.querySelector('.instruction');
+var playBtn = document.querySelector('.play-btn');
 var scoreTotal = document.querySelector('.score-total');
 var tryAgain = document.querySelector('.score-total-btn');
 var ctx = canvas.getContext('2d');
@@ -191,6 +193,7 @@ var keys = {
   }
 };
 var winCondition = true;
+var isPlay = false;
 var scrollOffset = 0;
 var score = 0;
 
@@ -350,53 +353,12 @@ var Cloud = /*#__PURE__*/function () {
   return Cloud;
 }();
 
-var RainDrop = /*#__PURE__*/function () {
-  function RainDrop(_ref5) {
+var Collision = /*#__PURE__*/function () {
+  function Collision(_ref5) {
     var x = _ref5.x,
         y = _ref5.y,
-        speed = _ref5.speed;
-
-    _classCallCheck(this, RainDrop);
-
-    this.position = {
-      x: x,
-      y: y
-    };
-    this.fallSpeed = speed;
-    this.width = 1;
-    this.height = 2;
-    this.color = 'blue';
-  }
-
-  _createClass(RainDrop, [{
-    key: "draw",
-    value: function draw() {
-      ctx.fillStyle = this.color;
-      ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
-  }, {
-    key: "update",
-    value: function update() {
-      this.draw();
-
-      if (this.position.y + this.height <= windowheight - 100) {
-        this.position.y += this.fallSpeed;
-      } else {
-        this.position.x = Math.random() * windowWidth;
-        this.position.y = 0;
-      }
-    }
-  }]);
-
-  return RainDrop;
-}();
-
-var Collision = /*#__PURE__*/function () {
-  function Collision(_ref6) {
-    var x = _ref6.x,
-        y = _ref6.y,
-        width = _ref6.width,
-        height = _ref6.height;
+        width = _ref5.width,
+        height = _ref5.height;
 
     _classCallCheck(this, Collision);
 
@@ -446,18 +408,6 @@ var collisions = [new Collision({
   width: 50,
   height: 50
 })];
-var rainDrops = [];
-
-for (var i = 0; i < 10000; i++) {// let dropX = Math.random() * windowWidth 
-  // let dropY = Math.random() * (windowheight - 300)
-  // let dropSpeed = Math.random() * 5
-  // rainDrops.push(new RainDrop({
-  //     x: dropX,
-  //     y: dropY,
-  //     speed: dropSpeed,
-  // }))
-}
-
 var forest = [new Three({
   x: -85,
   y: windowheight - 600,
@@ -529,21 +479,6 @@ var animate = function animate() {
   forest.forEach(function (three) {
     three.draw();
   });
-  rainDrops.forEach(function (drop) {
-    drop.update();
-
-    if (keys.space.pressed) {
-      if (drop.position.y >= player.position.y + player.height - Math.floor(Math.random() * (100 - 50 + 1) + 50) && drop.position.x <= player.position.x + player.width / 2 && drop.position.x >= player.position.x - Math.floor(Math.random() * (50 - 25 + 1) + 20)) {
-        drop.position.x -= Math.random() * 50;
-        drop.position.y -= 20;
-      }
-
-      if (drop.position.y >= player.position.y + player.height - Math.floor(Math.random() * (100 - 50 + 1) + 50) && drop.position.x <= player.position.x + player.width + Math.floor(Math.random() * (50 - 25 + 1) + 20) && drop.position.x >= player.position.x + player.width / 2) {
-        drop.position.x += Math.random() * 50;
-        drop.position.y -= 20;
-      }
-    }
-  });
   player.update();
 
   if (keys.right.pressed && player.position.x < 400) {
@@ -606,74 +541,39 @@ var animate = function animate() {
     }
   });
 
-  if (scrollOffset > 2000) {
-    console.log('you win');
-  }
-
   if (winCondition) {
     scoreElement.innerHTML = "<span>Your score: ".concat(scrollOffset, "</span>");
     scoreTotal.classList.add('hide');
   } else {
     scoreTotal.classList.remove('hide');
   }
+
+  if (isPlay) {
+    instruction.classList.add('hide');
+  } else {
+    instruction.classList.remove('hide');
+  }
 };
 
 animate();
-addEventListener('keydown', function (_ref7) {
-  var key = _ref7.key;
+addEventListener('keydown', function (_ref6) {
+  var key = _ref6.key;
 
   switch (key) {
-    case 'ArrowUp':
+    case ' ':
       if (player.velocity.y === 0 && winCondition) {
         player.velocity.y -= 10;
       }
 
       break;
-
-    case 'ArrowRight':
-      keys.right.pressed = true;
-      break;
-
-    case 'ArrowDown':
-      //player.velocity.y += 10 
-      break;
-
-    case 'ArrowLeft':
-      keys.left.pressed = true;
-      break;
-
-    case ' ':
-      keys.space.pressed = true;
-      break;
-  }
-});
-addEventListener('keyup', function (_ref8) {
-  var key = _ref8.key;
-
-  switch (key) {
-    case 'ArrowUp':
-      //keys.up.pressed = false
-      break;
-
-    case 'ArrowRight':
-      keys.right.pressed = false;
-      break;
-
-    case 'ArrowDown':
-      //keys.down.pressed = false
-      break;
-
-    case 'ArrowLeft':
-      keys.left.pressed = false;
-      break;
-
-    case ' ':
-      keys.space.pressed = false;
-      break;
   }
 });
 tryAgain.addEventListener('click', function () {
   location.reload();
+});
+playBtn.addEventListener('click', function () {
+  isPlay = true;
+  keys.right.pressed = true;
 });
 
 /***/ })

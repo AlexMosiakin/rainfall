@@ -2,10 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Canvas Boilerplate | Chris Courses</title>
+    <title>RainFall</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./img/favicon-16x16.png"/>
   </head>
   <style>
     *{
@@ -25,8 +26,7 @@
         top: 50px;
         right: 50px;
     }
-    .score-total{
-      
+    .score-total, .instruction{
       transition: 0.5;
       position: absolute;
       width: 500px;
@@ -37,17 +37,18 @@
       padding: 50px;
       text-align: center;
     }
-    .score-total.hide{
+    .score-total.hide , .instruction.hide{
       opacity: 0;
       visibility: hidden;
     }
-    .score-total-text, .score-total-header{
+    .text, .header{
       color: #fff;
       margin-bottom: 40px;
+      line-height: 22px;
     }
-    .score-total-btn{
-      padding: 5px 10px;
-      border: 1px solid #000;
+    .btn{
+      padding: 10px 15px;
+      border: none;
       color: #000;
       background: #fff;
       cursor: pointer;
@@ -56,10 +57,15 @@
   <body>
     <div id="score"></div>
     <div class="rules-wrapper"></div>
+    <div class="instruction hide">
+      <h1 class="header">RAIN FALL</h1>
+      <div class="text">Simple 8bit game in style of T-Rex Chrome Dino Game, to start click button below!</div>
+      <button class="play-btn btn">PLAY</button>
+  </div>
     <div class="score-total hide">
-        <h1 class="score-total-header">GAME OVER</h1>
-        <div class="score-total-text">It looks like you didn't manage to escape from the forest :(</div>
-        <button class="score-total-btn">TRY AGAIN</button>
+        <h1 class="header">GAME OVER</h1>
+        <div class="text">It looks like you didn't manage to escape from the forest :(</div>
+        <button class="score-total-btn btn">TRY AGAIN</button>
     </div>
     <canvas></canvas>
   </body>
