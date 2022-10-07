@@ -379,7 +379,7 @@ var RainDrop = /*#__PURE__*/function () {
     value: function update() {
       this.draw();
 
-      if (this.position.y + this.height <= windowheight - 150) {
+      if (this.position.y + this.height <= windowheight - 100) {
         this.position.y += this.fallSpeed;
       } else {
         this.position.x = Math.random() * windowWidth;
